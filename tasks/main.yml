@@ -1,0 +1,19 @@
+---
+# in this case we want to check if a custom fact exists, if not
+# we'll just use a default for now
+- name: 'default cool stuff'
+  block:
+    - set_fact:
+        ready_for_cool: "{{ ansible_local.coolness.ready }}"
+  rescue:
+    - set_fact:
+        ready_for_cool: True
+# also broken
+- name: 'try defualts'
+  set_fact: 
+    more_coolness: "{{ ansible_local.coolness.ready | default(True) }}"
+# make coolness happen
+- name: "do cool stuff"
+  shell: |
+    echo "hello cool person" 
+  when: (ready_for_cool == True)# tasks file for broken_block
