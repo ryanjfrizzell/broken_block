@@ -1,20 +1,37 @@
 ---
 # in this case we want to check if a custom fact exists, if not
 # we'll just use a default for now
-- name: 'default cool stuff'
+# block this out since it's causing confustion
+#
+#- name: 'default cool stuff'
+#  block:
+#    - set_fact:
+#        ready_for_cool: "{{ ansible_local.coolness.ready }}"
+#  rescue:
+#    - set_fact:
+#        ready_for_cool: True
+#- name: "do cool stuff"
+#  shell: '/usr/bin/true'
+#  when: (ready_for_cool == True)
+
+
+
+# example ripped right from: 
+# https://docs.ansible.com/ansible/2.5/user_guide/playbooks_blocks.html#id2
+
+- name: Attempt and graceful roll back demo
   block:
-    - set_fact:
-        ready_for_cool: "{{ ansible_local.coolness.ready }}"
+    - debug:
+        msg: 'I execute normally'
+    - command: /bin/false
+    - debug:
+        msg: 'I never execute, due to the above task failing'
   rescue:
-    - set_fact:
-        ready_for_cool: True
-# also broken
-# comment this out since it seems to cause confusion
-#- name: 'try defualts'
-#  set_fact: 
-#    more_coolness: "{{ ansible_local.coolness.ready | default(True) }}"
-# make coolness happen
-- name: "do cool stuff"
-  shell: |
-    echo "hello cool person" 
-  when: (ready_for_cool == True)# tasks file for broken_block
+    - debug:
+        msg: 'I caught an error'
+    - command: /bin/false
+    - debug:
+        msg: 'I also never execute :-('
+  always:
+    - debug:
+        msg: "This always executes"
