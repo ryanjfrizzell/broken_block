@@ -54,7 +54,7 @@ PyNaCl==1.2.1
 pytest==3.7.0
 python-dateutil==2.7.3
 python-gilt==1.2.1
-PyYAML==3.12
+PyYAML==5.4
 requests==2.19.1
 scandir==1.7
 sh==1.12.14
